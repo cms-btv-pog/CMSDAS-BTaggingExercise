@@ -52,14 +52,16 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxE
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
         # /TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM
-        '/store/mc/Phys14DR/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_PHYS14_25_V1-v1/00000/00C90EFC-3074-E411-A845-002590DB9262.root'
+        #'/store/mc/Phys14DR/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_PHYS14_25_V1-v1/00000/00C90EFC-3074-E411-A845-002590DB9262.root'
+        'file:/data/shared/Short_Exercise_BTag/MINIAOD_Phys14DR_TTJets_PU20bx25/00C90EFC-3074-E411-A845-002590DB9262.root'
     )
 )
 
 if options.process == "QCD":
     process.source.fileNames = [
         # /QCD_Pt-15to3000_Tune4C_Flat_13TeV_pythia8/Phys14DR-PU20bx25_trkalmb_PHYS14_25_V1-v1/MINIAODSIM
-        '/store/mc/Phys14DR/QCD_Pt-15to3000_Tune4C_Flat_13TeV_pythia8/MINIAODSIM/PU20bx25_trkalmb_PHYS14_25_V1-v1/00000/1EF51024-986B-E411-A6F6-20CF300E9EAF.root'
+        #'/store/mc/Phys14DR/QCD_Pt-15to3000_Tune4C_Flat_13TeV_pythia8/MINIAODSIM/PU20bx25_trkalmb_PHYS14_25_V1-v1/00000/1EF51024-986B-E411-A6F6-20CF300E9EAF.root'
+        'file:/data/shared/Short_Exercise_BTag/MINIAOD_Phys14DR_QCDPt15to3000_PU20bx25/1EF51024-986B-E411-A6F6-20CF300E9EAF.root'
     ]
 
 ## Output file
