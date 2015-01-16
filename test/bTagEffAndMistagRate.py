@@ -104,7 +104,9 @@ legend.AddEntry(eff_b_QCD,"QCD","lp")
 legend.Draw()
 
 # save the plot
-c.SaveAs('bTaggingEfficiency_CSVv2IVFM.png')
+if options.operating_point == 'loose': c.SaveAs('bTaggingEfficiency_CSVv2IVFL.png')
+if options.operating_point == 'tight': c.SaveAs('bTaggingEfficiency_CSVv2IVFT.png')
+else: c.SaveAs('bTaggingEfficiency_CSVv2IVFM.png')
 
 # light-flavor jets
 mistag_udsg_ttbar = TGraphAsymmErrors(tagged_udsg_ttbar, total_udsg_ttbar, "cp")
@@ -140,7 +142,9 @@ legend.Draw()
 c.SetLogy()
 
 # save the plot
-c.SaveAs('MistagRate_CSVv2IVFM.png')
+if options.operating_point == 'loose': c.SaveAs('MistagRate_CSVv2IVFL.png')
+if options.operating_point == 'tight': c.SaveAs('MistagRate_CSVv2IVFT.png')
+else: c.SaveAs('MistagRate_CSVv2IVFM.png')
 
 # close the input files
 inputFile_ttbar.Close()
