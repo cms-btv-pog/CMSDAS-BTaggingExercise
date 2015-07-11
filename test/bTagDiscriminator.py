@@ -27,7 +27,7 @@ gStyle.SetLabelFont(42, "XYZ")
 
 
 # b-tagger
-bTagger = 'combinedInclusiveSecondaryVertexV2BJetTags'
+bTagger = 'pfCombinedInclusiveSecondaryVertexV2BJetTags'
 
 # input file
 inputFile = TFile('exerciseII_histos_ttbar.root')
@@ -47,7 +47,7 @@ c = TCanvas("c", "",1200,800)
 c.cd()
 
 # light-flavor jets
-discr_udsg.GetXaxis().SetTitle("CSVv2IVF discriminator")
+discr_udsg.GetXaxis().SetTitle("pfCSVv2IVF discriminator")
 discr_udsg.GetXaxis().SetRangeUser(-0.005,1.005)
 discr_udsg.SetLineWidth(1)
 discr_udsg.SetLineColor(4) # blue
@@ -90,10 +90,10 @@ legend.Draw()
 gPad.RedrawAxis()
 
 # save the plot
-c.SaveAs('CSVv2IVF_discriminator.png')
+c.SaveAs('pfCSVv2IVF_discriminator.png')
 
 c.SetLogy()
-c.SaveAs('CSVv2IVF_discriminator_log.png')
+c.SaveAs('pfCSVv2IVF_discriminator_log.png')
 
 # close the input file
 inputFile.Close()
