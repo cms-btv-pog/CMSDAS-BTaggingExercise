@@ -31,12 +31,6 @@ options.parseArguments()
 
 process = cms.Process("USER")
 
-process.load("Configuration.StandardSequences.MagneticField_cff")
-process.load("Configuration.Geometry.GeometryIdeal_cff")
-process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
-
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
 
@@ -46,9 +40,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxE
 ## Input files
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        # /TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM
-        #'/store/mc/Phys14DR/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_PHYS14_25_V1-v1/00000/00C90EFC-3074-E411-A845-002590DB9262.root'
-        'file:/data/shared/Short_Exercise_BTag/MINIAOD_Phys14DR_TTJets_PU20bx25/00C90EFC-3074-E411-A845-002590DB9262.root'
+        # /TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM
+        '/store/mc/RunIISpring15DR74/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v2/00000/06B5178E-F008-E511-A2CF-00261894390B.root'
     )
 )
 
@@ -67,14 +60,15 @@ process.options   = cms.untracked.PSet(
 process.bTaggingExerciseIPartI = cms.EDAnalyzer('BTaggingExerciseI',
     jets = cms.InputTag('slimmedJets'), # input jet collection name
     bDiscriminators = cms.vstring(      # list of b-tag discriminators to access
-        'trackCountingHighEffBJetTags',
-        'trackCountingHighPurBJetTags',
-        'jetProbabilityBJetTags',
-        'jetBProbabilityBJetTags',
-        'simpleSecondaryVertexHighEffBJetTags',
-        'simpleSecondaryVertexHighPurBJetTags',
-        'combinedSecondaryVertexBJetTags',
-        'combinedInclusiveSecondaryVertexV2BJetTags'
+        'pfTrackCountingHighEffBJetTags',
+        'pfTrackCountingHighPurBJetTags',
+        'pfJetProbabilityBJetTags',
+        'pfJetBProbabilityBJetTags',
+        'pfSimpleSecondaryVertexHighEffBJetTags',
+        'pfSimpleSecondaryVertexHighPurBJetTags',
+        'pfCombinedSecondaryVertexV2BJetTags',
+        'pfCombinedInclusiveSecondaryVertexV2BJetTags',
+        'pfCombinedMVABJetTags'
     )
 )
 

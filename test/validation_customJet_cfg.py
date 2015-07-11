@@ -20,14 +20,14 @@ options.register('wantSummary', False,
 )
 
 ## 'maxEvents' is already registered by the Framework, changing default value
-options.setDefault('maxEvents', 1000)
+options.setDefault('maxEvents', 100)
 
 options.parseArguments()
 
 process = cms.Process("Validation")
 
-process.load("Configuration.StandardSequences.MagneticField_cff")
-process.load("Configuration.Geometry.GeometryIdeal_cff")
+process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff")
+process.load("Configuration.Geometry.GeometryRecoDB_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
@@ -38,7 +38,6 @@ process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
 ## Load DQM
 process.load("DQMServices.Components.DQMEnvironment_cfi")
 process.load("DQMServices.Core.DQM_cfg")
-process.load("DQMOffline.RecoB.bTagSequences_cff")
 
 ## Events to process
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
@@ -46,9 +45,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxE
 ## Input files
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        # /TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM
-#        '/store/mc/Phys14DR/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_PHYS14_25_V1-v1/00000/00C90EFC-3074-E411-A845-002590DB9262.root'
-        'file:/data/shared/Short_Exercise_BTag/MINIAOD_Phys14DR_TTJets_PU20bx25/00C90EFC-3074-E411-A845-002590DB9262.root'
+        # /TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM
+        '/store/mc/RunIISpring15DR74/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v2/00000/06B5178E-F008-E511-A2CF-00261894390B.root'
     )
 )
 
@@ -91,7 +89,7 @@ process.btagSeq = cms.Sequence(
       process.pfSecondaryVertexTagInfos *
       ( process.pfSimpleSecondaryVertexHighEffBJetTags +
         process.pfSimpleSecondaryVertexHighPurBJetTags +
-        process.pfCombinedSecondaryVertexBJetTags
+        process.pfCombinedSecondaryVertexV2BJetTags
       )
       + process.pfInclusiveSecondaryVertexFinderTagInfos *
       process.pfCombinedInclusiveSecondaryVertexV2BJetTags
@@ -117,12 +115,13 @@ process.patJetGenJetMatch.matched = cms.InputTag("ak4GenJetsForPUid")
 process.patJetGenJetMatch.maxDeltaR = cms.double(0.25)
 process.patJetGenJetMatch.resolveAmbiguities = cms.bool(True)
 
-## Load the jet flavor modules (DQM framework still uses the old parton-based flavor definition so here we use the old flavor tools)
-process.load("PhysicsTools.JetMCAlgos.CaloJetsMCFlavour_cfi")  
-process.AK4byRef.jets = jetCollection
+## Load the jet flavor modules
+process.load("PhysicsTools.JetMCAlgos.HadronAndPartonSelector_cfi")
+process.load("PhysicsTools.JetMCAlgos.AK4PFJetsMCFlavourInfos_cfi")
+process.ak4JetFlavourInfos.jets = jetCollection
 process.flavourSeq = cms.Sequence(
-    process.myPartons *
-    process.AK4Flavour
+    process.selectedHadronsAndPartons *
+    process.ak4JetFlavourInfos
 )
 
 ## Load b-tag validation
@@ -166,12 +165,12 @@ tags = cms.VPSet(
         ),
     cms.PSet(
         bTagGenericAnalysisBlock,
-        label = cms.InputTag("pfCombinedSecondaryVertexBJetTags"),
-        folder = cms.string("pfCSV")
+        label = cms.InputTag("pfCombinedSecondaryVertexV2BJetTags"),
+        folder = cms.string("pfCSVv2")
         )
 )
 ## Tweak the validation configuration
-process.bTagValidation.jetMCSrc = 'AK4byValAlgo'
+process.bTagValidation.jetMCSrc = 'ak4JetFlavourInfos'
 process.bTagValidation.applyPtHatWeight = False
 process.bTagValidation.genJetsMatched = cms.InputTag("patJetGenJetMatch")
 process.bTagValidation.doPUid = cms.bool(True)
@@ -200,8 +199,10 @@ process.pfImpactParameterTagInfos.primaryVertex = cms.InputTag("offlineSlimmedPr
 process.pfImpactParameterTagInfos.candidates = cms.InputTag("packedPFCandidates")
 process.pfInclusiveSecondaryVertexFinderTagInfos.extSVCollection = cms.InputTag('slimmedSecondaryVertices')
 process.softPFMuonsTagInfos.primaryVertex = cms.InputTag("offlineSlimmedPrimaryVertices")
+process.softPFMuonsTagInfos.muons = cms.InputTag("slimmedMuons")
 process.softPFElectronsTagInfos.primaryVertex = cms.InputTag("offlineSlimmedPrimaryVertices")
-process.myPartons.src = cms.InputTag("prunedGenParticles")
+process.softPFElectronsTagInfos.electrons = cms.InputTag("slimmedElectrons")
+process.selectedHadronsAndPartons.particles = cms.InputTag("prunedGenParticles")
 
 ## Let it run
 process.dqm = cms.Path(process.pfCHS * process.ak4PFJetsCHS * process.btagSeq * process.ak4GenJetsForPUid * process.patJetGenJetMatch * process.flavourSeq * process.bTagValidation * process.bTagHarvestMC * process.dqmSaver)

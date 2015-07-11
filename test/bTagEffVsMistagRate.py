@@ -67,16 +67,16 @@ def main():
 
     # b-taggers
     bTaggers = [
-        'trackCountingHighEffBJetTags',
-        'trackCountingHighPurBJetTags',
-        'simpleSecondaryVertexHighEffBJetTags',
-        'simpleSecondaryVertexHighPurBJetTags',
-        'jetProbabilityBJetTags',
-        'jetBProbabilityBJetTags',
-        'combinedInclusiveSecondaryVertexV2BJetTags'
+        'pfTrackCountingHighEffBJetTags',
+        'pfTrackCountingHighPurBJetTags',
+        'pfSimpleSecondaryVertexHighEffBJetTags',
+        'pfSimpleSecondaryVertexHighPurBJetTags',
+        'pfJetProbabilityBJetTags',
+        'pfJetBProbabilityBJetTags',
+        'pfCombinedInclusiveSecondaryVertexV2BJetTags'
     ]
     color = [kOrange, kRed, kCyan, kGreen, kMagenta, kBlue, kBlack]
-    legend = ['TCHE', 'TCHP', 'SSVHE', 'SSVHP', 'JP', 'JBP', 'CSVv2IVF']
+    legend = ['pfTCHE', 'pfTCHP', 'pfSSVHE', 'pfSSVHP', 'pfJP', 'pfJBP', 'pfCSVv2IVF']
 
     # non-b flavors
     nonbs = ['c','udsg']
