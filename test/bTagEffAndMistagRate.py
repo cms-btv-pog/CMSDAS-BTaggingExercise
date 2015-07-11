@@ -34,12 +34,12 @@ parser.add_option('-o', '--operating_point', metavar='OPERATING_POINT', action='
 
 
 # b-tagger
-bTagger = 'combinedInclusiveSecondaryVertexV2BJetTags'
+bTagger = 'pfCombinedInclusiveSecondaryVertexV2BJetTags'
 
 # medium operating point
-operatingPoint = 0.814 # CSVv2IVFM
-if options.operating_point == 'loose': operatingPoint = 0.423 # CSVv2IVFL
-if options.operating_point == 'tight': operatingPoint = 0.941 # CSVv2IVFT
+operatingPoint = 0.890 # CSVv2IVFM
+if options.operating_point == 'loose': operatingPoint = 0.605 # CSVv2IVFL
+if options.operating_point == 'tight': operatingPoint = 0.970 # CSVv2IVFT
 
 # input files
 inputFile_ttbar = TFile('exerciseII_histos_ttbar.root')
@@ -104,9 +104,9 @@ legend.AddEntry(eff_b_QCD,"QCD","lp")
 legend.Draw()
 
 # save the plot
-if options.operating_point == 'loose': c.SaveAs('bTaggingEfficiency_CSVv2IVFL.png')
-if options.operating_point == 'tight': c.SaveAs('bTaggingEfficiency_CSVv2IVFT.png')
-else: c.SaveAs('bTaggingEfficiency_CSVv2IVFM.png')
+if options.operating_point == 'loose': c.SaveAs('bTaggingEfficiency_pfCSVv2IVFL.png')
+elif options.operating_point == 'tight': c.SaveAs('bTaggingEfficiency_pfCSVv2IVFT.png')
+else: c.SaveAs('bTaggingEfficiency_pfCSVv2IVFM.png')
 
 # light-flavor jets
 mistag_udsg_ttbar = TGraphAsymmErrors(tagged_udsg_ttbar, total_udsg_ttbar, "cp")
@@ -142,9 +142,9 @@ legend.Draw()
 c.SetLogy()
 
 # save the plot
-if options.operating_point == 'loose': c.SaveAs('MistagRate_CSVv2IVFL.png')
-if options.operating_point == 'tight': c.SaveAs('MistagRate_CSVv2IVFT.png')
-else: c.SaveAs('MistagRate_CSVv2IVFM.png')
+if options.operating_point == 'loose': c.SaveAs('MistagRate_pfCSVv2IVFL.png')
+elif options.operating_point == 'tight': c.SaveAs('MistagRate_pfCSVv2IVFT.png')
+else: c.SaveAs('MistagRate_pfCSVv2IVFM.png')
 
 # close the input files
 inputFile_ttbar.Close()

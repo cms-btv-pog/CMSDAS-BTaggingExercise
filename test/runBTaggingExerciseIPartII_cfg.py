@@ -31,8 +31,8 @@ options.parseArguments()
 
 process = cms.Process("USER")
 
-process.load("Configuration.StandardSequences.MagneticField_cff")
-process.load("Configuration.Geometry.GeometryIdeal_cff")
+process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff")
+process.load("Configuration.Geometry.GeometryRecoDB_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
@@ -46,9 +46,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxE
 ## Input files
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        # /TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM
-        #'/store/mc/Phys14DR/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU20bx25_PHYS14_25_V1-v1/00000/00C90EFC-3074-E411-A845-002590DB9262.root'
-        'file:/data/shared/Short_Exercise_BTag/MINIAOD_Phys14DR_TTJets_PU20bx25/00C90EFC-3074-E411-A845-002590DB9262.root'
+        # /TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM
+        '/store/mc/RunIISpring15DR74/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v2/00000/06B5178E-F008-E511-A2CF-00261894390B.root'
     )
 )
 
@@ -91,8 +90,9 @@ bTagDiscriminators = [
     'pfJetBProbabilityBJetTags',
     'pfSimpleSecondaryVertexHighEffBJetTags',
     'pfSimpleSecondaryVertexHighPurBJetTags',
-    'pfCombinedSecondaryVertexBJetTags',
-    'pfCombinedInclusiveSecondaryVertexV2BJetTags'
+    'pfCombinedSecondaryVertexV2BJetTags',
+    'pfCombinedInclusiveSecondaryVertexV2BJetTags',
+    'pfCombinedMVABJetTags'
 ]
 
 from PhysicsTools.PatAlgos.tools.jetTools import *
@@ -103,16 +103,13 @@ switchJetCollection(
     pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
     pfCandidates = cms.InputTag('packedPFCandidates'),
     svSource = cms.InputTag('slimmedSecondaryVertices'),
+    muSource = cms.InputTag('slimmedMuons'),
+    elSource = cms.InputTag('slimmedElectrons'),
     btagDiscriminators = bTagDiscriminators,
     jetCorrections = ('AK4PFchs', ['L1FastJet', 'L2Relative', 'L3Absolute'], 'None'),
-    genJetCollection = cms.InputTag('ak4GenJetsNoNu')
+    genJetCollection = cms.InputTag('ak4GenJetsNoNu'),
+    genParticles = cms.InputTag('prunedGenParticles')
 )
-getattr(process,'patJetPartons').particles = cms.InputTag('prunedGenParticles')
-getattr(process,'patJetPartonMatch').matched = cms.InputTag('prunedGenParticles')
-if hasattr(process,'pfInclusiveSecondaryVertexFinderTagInfos'):
-    getattr(process,'pfInclusiveSecondaryVertexFinderTagInfos').extSVCollection = cms.InputTag('slimmedSecondaryVertices')
-getattr(process,'patJets').addAssociatedTracks = cms.bool(False) # needs to be disabled since there is no track collection present in MiniAOD
-getattr(process,'patJets').addJetCharge = cms.bool(False)        # needs to be disabled since there is no track collection present in MiniAOD
 getattr(process,'selectedPatJets').cut = cms.string('pt > 10')   # to match the selection for slimmedJets in MiniAOD
 
 from PhysicsTools.PatAlgos.tools.pfTools import *
@@ -131,8 +128,9 @@ process.bTaggingExerciseIPartII = cms.EDAnalyzer('BTaggingExerciseI',
         'pfJetBProbabilityBJetTags',
         'pfSimpleSecondaryVertexHighEffBJetTags',
         'pfSimpleSecondaryVertexHighPurBJetTags',
-        'pfCombinedSecondaryVertexBJetTags',
-        'pfCombinedInclusiveSecondaryVertexV2BJetTags'
+        'pfCombinedSecondaryVertexV2BJetTags',
+        'pfCombinedInclusiveSecondaryVertexV2BJetTags',
+        'pfCombinedMVABJetTags'
     )
 )
 
