@@ -127,11 +127,10 @@ BTaggingExerciseII::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
   // loop over jets
   for( auto jet = jets->begin(); jet != jets->end(); ++jet )
   {
-    int flavor = std::abs( jet->partonFlavour() );
+    int flavor = std::abs( jet->hadronFlavour() );
     // fill discriminator histograms
     for( const std::string &bDiscr : bDiscriminators_ )
     {
-      if( flavor==0 ) continue; // skip jets with undefined flavor
       if( jet->pt()<30. || std::abs(jet->eta())>2.4 ) continue; // skip jets with low pT or outside the tracker acceptance
 
       if( flavor==5 ) // b jet

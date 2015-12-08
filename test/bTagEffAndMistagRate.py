@@ -42,8 +42,8 @@ if options.operating_point == 'loose': operatingPoint = 0.605 # CSVv2IVFL
 if options.operating_point == 'tight': operatingPoint = 0.970 # CSVv2IVFT
 
 # input files
-inputFile_ttbar = TFile('exerciseII_histos_ttbar.root')
-inputFile_QCD   = TFile('exerciseII_histos_QCD.root')
+inputFile_ttbar = TFile.Open('exerciseII_histos_ttbar.root')
+inputFile_QCD   = TFile.Open('exerciseII_histos_QCD.root')
 
 # get 2D b-tag discriminator vs jet pT histograms
 discrVsPt_b_ttbar    = inputFile_ttbar.Get('bTaggingExerciseII/' + bTagger + '_b')

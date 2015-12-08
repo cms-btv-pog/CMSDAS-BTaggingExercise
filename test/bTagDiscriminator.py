@@ -30,7 +30,7 @@ gStyle.SetLabelFont(42, "XYZ")
 bTagger = 'pfCombinedInclusiveSecondaryVertexV2BJetTags'
 
 # input file
-inputFile = TFile('exerciseII_histos_ttbar.root')
+inputFile = TFile.Open('exerciseII_histos_ttbar.root')
 
 # get 2D b-tag discriminator vs jet pT histograms
 discrVsPt_b    = inputFile.Get('bTaggingExerciseII/' + bTagger + '_b')
