@@ -63,7 +63,7 @@ def makeEffVsMistagTGraph(histo_b,histo_nonb,allowNegative):
 def main():
 
     # input file
-    inputFile = TFile('exerciseII_histos_ttbar.root')
+    inputFile = TFile.Open('exerciseII_histos_ttbar.root')
 
     # b-taggers
     bTaggers = [
@@ -131,6 +131,9 @@ def main():
 
         # save the plot
         c.SaveAs('bTagEffVsMistagRate_' + nonb + '.png')
+
+        c.Close()
+        bkg.Delete()
 
     # close the input file
     inputFile.Close()
