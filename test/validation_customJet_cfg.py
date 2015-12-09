@@ -45,8 +45,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxE
 ## Input files
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        # /TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2/MINIAODSIM
-        '/store/mc/RunIISpring15DR74/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v2/00000/06B5178E-F008-E511-A2CF-00261894390B.root'
+        # /TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2_ext3-v1/MINIAODSIM
+        '/store/mc/RunIISpring15MiniAODv2/TT_TuneCUETP8M1_13TeV-powheg-pythia8/MINIAODSIM/74X_mcRun2_asymptotic_v2_ext3-v1/10000/003964D7-D06E-E511-A8DA-001517F7F524.root'
     )
 )
 
@@ -119,6 +119,7 @@ process.patJetGenJetMatch.resolveAmbiguities = cms.bool(True)
 process.load("PhysicsTools.JetMCAlgos.HadronAndPartonSelector_cfi")
 process.load("PhysicsTools.JetMCAlgos.AK4PFJetsMCFlavourInfos_cfi")
 process.ak4JetFlavourInfos.jets = jetCollection
+process.ak4JetFlavourInfos.hadronFlavourHasPriority = cms.bool(True)
 process.flavourSeq = cms.Sequence(
     process.selectedHadronsAndPartons *
     process.ak4JetFlavourInfos
