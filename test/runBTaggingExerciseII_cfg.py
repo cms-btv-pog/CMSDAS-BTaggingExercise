@@ -53,7 +53,7 @@ process.source = cms.Source("PoolSource",
 if options.process == "QCD":
     process.source.fileNames = [
         # /QCD_Pt-15TTo7000_TuneZ2star-Flat_13TeV_pythia6/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM
-        '/store/mc/RunIISpring15MiniAODv2/QCD_Pt-15TTo7000_TuneZ2star-Flat_13TeV_pythia6/MINIAODSIM/74X_mcRun2_asymptotic_v2-v1/10000/0654AF65-6774-E511-8118-0CC47A0AD780.root'
+        '/store/user/cmsdas/2016/SHORT_EXERCISES/BTagging/QCDfile/RunIISpring15MiniAODv2/QCD_Pt-15TTo7000_TuneZ2star-Flat_13TeV_pythia6/MINIAODSIM/74X_mcRun2_asymptotic_v2-v1/0654AF65-6774-E511-8118-0CC47A0AD780.root'
     ]
 
 ## Output file
