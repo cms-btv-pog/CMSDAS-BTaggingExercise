@@ -13,7 +13,7 @@ options.register('reportEvery', 10,
     VarParsing.varType.int,
     "Report every N events (default is N=10)"
 )
-options.register('outputFilename', 'exerciseIPartII_histos.root',
+options.register('outputFilename', 'exerciseIPartII_histos_reclustering.root',
     VarParsing.multiplicity.singleton,
     VarParsing.varType.string,
     "Output file name"
@@ -62,10 +62,24 @@ process.options   = cms.untracked.PSet(
 )
 
 #################################################
-## Update PAT jets
+## Remake jets
 #################################################
 
-from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
+## Filter out neutrinos from packed GenParticles
+process.packedGenParticlesForJetsNoNu = cms.EDFilter("CandPtrSelector", src = cms.InputTag("packedGenParticles"), cut = cms.string("abs(pdgId) != 12 && abs(pdgId) != 14 && abs(pdgId) != 16"))
+## Define GenJets
+from RecoJets.JetProducers.ak4GenJets_cfi import ak4GenJets
+process.ak4GenJetsNoNu = ak4GenJets.clone(src = 'packedGenParticlesForJetsNoNu')
+
+## Select charged hadron subtracted packed PF candidates
+process.pfCHS = cms.EDFilter("CandPtrSelector", src = cms.InputTag("packedPFCandidates"), cut = cms.string("fromPV"))
+from RecoJets.JetProducers.ak4PFJets_cfi import ak4PFJets
+## Define PFJetsCHS
+process.ak4PFJetsCHS = ak4PFJets.clone(src = 'pfCHS', doAreaFastjet = True)
+
+#################################################
+## Remake PAT jets
+#################################################
 
 ## b-tag discriminators
 bTagDiscriminators = [
@@ -81,19 +95,31 @@ bTagDiscriminators = [
 ]
 
 from PhysicsTools.PatAlgos.tools.jetTools import *
-## Update the slimmedJets in miniAOD: corrections from the chosen Global Tag are applied and the b-tag discriminators are re-evaluated
-updateJetCollection(
+## Switch the default PAT jet collection to the above-defined ak4PFJetsCHS
+switchJetCollection(
     process,
-    jetSource = cms.InputTag('slimmedJets'),
-    jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None'),
-    btagDiscriminators = bTagDiscriminators
+    jetSource = cms.InputTag('ak4PFJetsCHS'),
+    pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
+    pfCandidates = cms.InputTag('packedPFCandidates'),
+    svSource = cms.InputTag('slimmedSecondaryVertices'),
+    muSource = cms.InputTag('slimmedMuons'),
+    elSource = cms.InputTag('slimmedElectrons'),
+    btagDiscriminators = bTagDiscriminators,
+    jetCorrections = ('AK4PFchs', ['L1FastJet', 'L2Relative', 'L3Absolute'], 'None'),
+    genJetCollection = cms.InputTag('ak4GenJetsNoNu'),
+    genParticles = cms.InputTag('prunedGenParticles')
 )
+getattr(process,'selectedPatJets').cut = cms.string('pt > 10')   # to match the selection for slimmedJets in MiniAOD
+
+from PhysicsTools.PatAlgos.tools.pfTools import *
+## Adapt primary vertex collection
+adaptPVs(process, pvCollection=cms.InputTag('offlineSlimmedPrimaryVertices'))
 
 #################################################
 
 ## Initialize analyzer
 process.bTaggingExerciseIPartII = cms.EDAnalyzer('BTaggingExerciseI',
-    jets = cms.InputTag('selectedUpdatedPatJets'), # input jet collection name
+    jets = cms.InputTag('selectedPatJets'), # input jet collection name
     bDiscriminators = cms.vstring(          # list of b-tag discriminators to access
         'pfTrackCountingHighEffBJetTags',
         'pfTrackCountingHighPurBJetTags',
