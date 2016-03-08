@@ -59,7 +59,7 @@ class BTaggingExerciseII : public edm::EDAnalyzer {
       //virtual void endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&) override;
 
       // ----------member data ---------------------------
-      const edm::InputTag jets_;
+      const edm::EDGetTokenT<std::vector<pat::Jet> > jets_;
       const std::vector<std::string> bDiscriminators_;
 
       edm::Service<TFileService> fs;
@@ -81,7 +81,7 @@ class BTaggingExerciseII : public edm::EDAnalyzer {
 //
 BTaggingExerciseII::BTaggingExerciseII(const edm::ParameterSet& iConfig) :
 
-  jets_(iConfig.getParameter<edm::InputTag>("jets")),
+  jets_(consumes<std::vector<pat::Jet> >(iConfig.getParameter<edm::InputTag>("jets"))),
   bDiscriminators_(iConfig.getParameter<std::vector<std::string> >("bDiscriminators"))
 
 {
@@ -121,7 +121,7 @@ BTaggingExerciseII::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
   // define a jet handle
   edm::Handle<std::vector<pat::Jet> > jets;
   // get jets from the event
-  iEvent.getByLabel(jets_, jets);
+  iEvent.getByToken(jets_, jets);
 
   std::string bDiscr_flav = "";
   // loop over jets
