@@ -37,9 +37,9 @@ parser.add_option('-o', '--operating_point', metavar='OPERATING_POINT', action='
 bTagger = 'pfCombinedInclusiveSecondaryVertexV2BJetTags'
 
 # medium operating point
-operatingPoint = 0.890 # CSVv2IVFM
-if options.operating_point == 'loose': operatingPoint = 0.605 # CSVv2IVFL
-if options.operating_point == 'tight': operatingPoint = 0.970 # CSVv2IVFT
+operatingPoint = 0.800 # CSVv2IVFM
+if options.operating_point == 'loose': operatingPoint = 0.460 # CSVv2IVFL
+if options.operating_point == 'tight': operatingPoint = 0.935 # CSVv2IVFT
 
 # input files
 inputFile_ttbar = TFile.Open('exerciseII_histos_ttbar.root')
