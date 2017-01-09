@@ -36,6 +36,13 @@ options.parseArguments()
 
 process = cms.Process("USER")
 
+
+process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff")
+process.load("Configuration.Geometry.GeometryRecoDB_cff")
+process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
+from Configuration.AlCa.GlobalTag import GlobalTag
+process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
+
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
 
@@ -67,9 +74,39 @@ process.options   = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True)
 )
 
+
+#################################################
+## Update PAT jets
+#################################################
+
+from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
+
+## b-tag discriminators
+bTagDiscriminators = [
+    'pfTrackCountingHighEffBJetTags',
+    'pfTrackCountingHighPurBJetTags',
+    'pfJetProbabilityBJetTags',
+    'pfJetBProbabilityBJetTags',
+    'pfSimpleSecondaryVertexHighEffBJetTags',
+    'pfSimpleSecondaryVertexHighPurBJetTags',
+    'pfCombinedSecondaryVertexV2BJetTags',
+    'pfCombinedInclusiveSecondaryVertexV2BJetTags',
+    'pfCombinedMVAV2BJetTags'
+]
+
+from PhysicsTools.PatAlgos.tools.jetTools import *
+## Update the slimmedJets in miniAOD: corrections from the chosen Global Tag are applied and the b-tag discriminators are re-evaluated
+updateJetCollection(
+    process,
+    jetSource = cms.InputTag('slimmedJets'),
+    jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None'),
+    btagDiscriminators = bTagDiscriminators
+)
+
+
 ## Initialize analyzer
 process.bTaggingExerciseII = cms.EDAnalyzer('BTaggingExerciseII',
-    jets = cms.InputTag('slimmedJets'), # input jet collection name
+    jets = cms.InputTag('selectedUpdatedPatJets'), # input jet collection name
     bDiscriminators = cms.vstring(      # list of b-tag discriminators to access
         'pfTrackCountingHighEffBJetTags',
         'pfTrackCountingHighPurBJetTags',
